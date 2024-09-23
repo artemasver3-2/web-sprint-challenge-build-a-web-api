@@ -8,7 +8,12 @@ const {
     validateProjectId,
     validateProject,
  } = require('./projects-middleware')
+
+ 
 router.get('/', (req, res, next) => {
+    if (!Projects) {
+        res.send([])
+    }
   Projects.get()
     .then((projects) => {
       res.json(projects);
@@ -56,8 +61,22 @@ router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
     .catch(next);
 });
 
-router.delete('/', (req, res, next) => {});
-router.get('/', (req, res, next) => {});
+router.delete('/:id', validateProjectId, async (req, res, next) => {
+    try {
+        await Projects.remove(req.params.id);
+        res.json(req.project);
+      } catch (err) {
+        next(err);
+      }
+});
+
+router.get('/:id/actions', validateProjectId, (req, res, next) => {
+    Projects.getProjectActions(req.params.id)
+        .then((actions) => {
+            res.status(200).json(actions)
+        })
+        .catch(next)
+});
 
 router.use((err, req, res, next) => {
   //eslint-disable-line
