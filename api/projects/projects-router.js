@@ -4,6 +4,10 @@ const router = express.Router();
 
 const Projects = require('./projects-model');
 
+const { 
+    validateProjectId,
+    validateProject,
+ } = require('./projects-middleware')
 router.get('/', (req, res, next) => {
   Projects.get()
     .then((projects) => {
@@ -13,13 +17,13 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', validateProjectId, (req, res, next) => {
   const { id } = req.params.id;
   Projects.get(id)
     .then((project) => {
       res.json(project);
     })
-    .catch(next);
+    .catch(next)
 });
 
 router.post('/', async (req, res, next) => {
@@ -40,7 +44,18 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.put('/', (req, res, next) => {});
+router.put('/:id', validateProjectId, validateProject, (req, res, next) => {
+    const changes = { name: req.body.name, description: req.body.description }
+    Projects.update(req.params.id, changes)
+    .then(() => {
+      return Projects.get(req.params.id);
+    })
+    .then((updatedProject) => {
+      res.json(updatedProject);
+    })
+    .catch(next);
+});
+
 router.delete('/', (req, res, next) => {});
 router.get('/', (req, res, next) => {});
 

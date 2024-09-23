@@ -1,5 +1,5 @@
 // add middlewares here related to projects
-const Projects = require('./projects-model0')
+const Projects = require('./projects-model')
 
 async function validateProjectId(req, res, next) {
     try {
@@ -20,7 +20,20 @@ async function validateProjectId(req, res, next) {
   }
 
 
+function validateProject(req, res, next) {
+    const { description } = req.body 
+    if (!description || !description.trim()) {
+      res.status(400).json({
+        message: "missing required description field",
+      })
+    } else {
+      req.description = description.trim()
+      next()
+    }
+  }
+
   
 module.exports = {
     validateProjectId,
+    validateProject
   }
