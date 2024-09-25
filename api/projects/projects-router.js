@@ -9,7 +9,7 @@ const {
     validateProject,
  } = require('./projects-middleware')
 
- 
+
 router.get('/', (req, res, next) => {
     if (!Projects) {
         res.send([])
@@ -17,7 +17,6 @@ router.get('/', (req, res, next) => {
   Projects.get()
     .then((projects) => {
       res.json(projects);
-      console.log(projects);
     })
     .catch(next);
 });
