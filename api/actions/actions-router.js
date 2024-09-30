@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../data/dbConfig')
+const Projects = require('../projects/projects-model');
 const Actions = require('./actions-model');
 const { validateActionId, logger } = require('./actions-middlware');
 
@@ -35,8 +35,12 @@ const { description, notes, project_id } = req.body;
   }
   try {
     // you suck aaaaaaaaaaaa and by you, i mean, myself, and I 
-    const projectExists = await db('projects').where({ id: project_id }).first();
+    // const projectExists = await db('projects').where({ id: project_id }).first();
     //i gotta be real, this is like an hour of my life i will never get back 
+
+    //i have been informed that this isn't needed, this works too
+    const projectExists = await Projects.get(project_id)
+
     if (!projectExists) {
       return res.status(404).json({
         message: 'The provided project_id does not belong to an existing project.',

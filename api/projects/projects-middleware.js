@@ -8,8 +8,12 @@ async function validateProjectId(req, res, next) {
         message: 'projects not found',
       });
     } else {
-      req.projects = projects;
-      next();
+    if(projects.id != req.params.id) {
+      res.status(404).json({
+        message: 'No project matching that id!'
+      })
+    }
+    next()
     }
   } catch (err) {
     res.status(500).json({
@@ -18,19 +22,18 @@ async function validateProjectId(req, res, next) {
   }
 }
 
-function validateProject(req, res, next) {
-  const { description } = req.body;
-  if (!description || !description.trim()) {
-    res.status(400).json({
-      message: 'missing required description field',
-    });
-  } else {
-    req.description = description.trim();
-    next();
-  }
-}
+// function validateProject(req, res, next) {
+//   const { name, description, completed } = req.body;
+//   if (!description || !name || !completed) {
+//    return res.status(400).json({
+//       message: 'missing required fields',
+//     });
+//   } else {
+//     next();
+//   }
+// }
 
 module.exports = {
   validateProjectId,
-  validateProject,
+  // validateProject,
 };
