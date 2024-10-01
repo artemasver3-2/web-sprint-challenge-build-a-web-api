@@ -56,33 +56,33 @@ router.put(
   validateProjectId,
   // validateProject,
   async (req, res, next) => {
-   
-   
-  const name = req.body.name 
-  const description = req.body.description
-  const completed = req.body.completed
+    const id = req.params.id;
+    const completedValue =
+      req.body.completed === undefined ? false : Boolean(req.body.completed);
+    const changes = {
+      name: req.body.name,
+      description: req.body.description,
+      completed: Boolean(req.body.completed),
+    };
 
-   
-    // if (!name || !completed || ! description) {
-    //   return res.status(400).json({
-    //     message: 'Missing required fields.',
-    //   });
-    // }
+    if (
+      !changes.hasOwnProperty('name') ||
+      !changes.hasOwnProperty('description') ||
+      !changes.hasOwnProperty('completed')
+    ) {
+      return res.status(400).json({
+        message: 'Missing required fields.',
+      });
+    }
 
     try {
-      const id = req.params.id;
-      const result = await Projects.update(id, {name: name, description: description, completed: completed});
-
-   
+      const result = await Projects.update(id, changes);
       res.status(200).json(result);
-      console.log(result)
     } catch (err) {
       next(err);
     }
   }
 );
-
-
 
 router.delete('/:id', validateProjectId, async (req, res, next) => {
   try {
