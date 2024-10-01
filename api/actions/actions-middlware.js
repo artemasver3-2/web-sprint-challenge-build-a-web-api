@@ -8,7 +8,11 @@ async function validateActionId(req, res, next) {
         message: 'actions not found',
       });
     } else {
-      req.actions = actions;
+      if(actions.id != req.params.id) {
+        res.status(404).json({
+          message: 'No project matching that id!'
+        })
+      }
       next();
     }
   } catch (err) {

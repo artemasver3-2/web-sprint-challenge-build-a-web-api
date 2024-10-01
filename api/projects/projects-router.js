@@ -58,24 +58,23 @@ router.put(
   async (req, res, next) => {
     const id = req.params.id;
 
-    const name = req.body.name
-    const description = req.body.description
-    const completedValue = req.body.completed === undefined ? false : Boolean(req.body.completed);
-
-
-    if(!name ||
-      !description || 
-      !completedValue) {
+    
+    if(!req.body.hasOwnProperty('name') ||
+      !req.body.hasOwnProperty('description') || 
+      !req.body.hasOwnProperty('completed')) {
         return res.status(400).json({
           message: 'Missing required fields.',
         });
       }
 
       const changes = {
-        name: name,
-        description: description,
-        completed: completedValue
+        name: req.body.name,
+        description: req.body.description,
+        completed: Boolean(req.body.completed)
       };
+
+
+
       console.log(changes)
 
     try {
