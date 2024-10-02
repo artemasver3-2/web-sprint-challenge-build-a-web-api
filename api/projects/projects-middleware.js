@@ -22,18 +22,19 @@ async function validateProjectId(req, res, next) {
   }
 }
 
-// function validateProject(req, res, next) {
-//   const { name, description, completed } = req.body;
-//   if (!description || !name || !completed) {
-//    return res.status(400).json({
-//       message: 'missing required fields',
-//     });
-//   } else {
-//     next();
-//   }
-// }
+function validateProject(req, res, next) {
+  if(!req.body.hasOwnProperty('name') ||
+  !req.body.hasOwnProperty('description') || 
+  !req.body.hasOwnProperty('completed')) {
+    return res.status(400).json({
+      message: 'Missing required fields.',
+    });
+  } else {
+    next();
+  }
+}
 
 module.exports = {
   validateProjectId,
-  // validateProject,
+  validateProject,
 };

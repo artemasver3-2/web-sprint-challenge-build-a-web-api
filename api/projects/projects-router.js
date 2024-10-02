@@ -4,7 +4,7 @@ const router = express.Router();
 
 const Projects = require('./projects-model');
 
-const { validateProjectId } = require('./projects-middleware');
+const { validateProjectId, validateProject } = require('./projects-middleware');
 
 router.get('/', (req, res, next) => {
   if (!Projects) {
@@ -54,18 +54,10 @@ router.post('/', async (req, res, next) => {
 router.put(
   '/:id',
   validateProjectId,
-  // validateProject,
+  validateProject,
   async (req, res, next) => {
     const id = req.params.id;
 
-    
-    if(!req.body.hasOwnProperty('name') ||
-      !req.body.hasOwnProperty('description') || 
-      !req.body.hasOwnProperty('completed')) {
-        return res.status(400).json({
-          message: 'Missing required fields.',
-        });
-      }
 
       const changes = {
         name: req.body.name,
@@ -84,6 +76,9 @@ router.put(
       next(err);
     }
   }
+  // i lied, this was the worst, honestly. Like, once I understood what I was doing wrong, easy, but until then, literal days of confusion. PUT reqs are something else, you should really explain that to people a little more in depth. Like, a whole thing on just them alone would be awesome cause I really did spend two to three days on this req alone. 
+
+  // probably just I am dumb, but ya know.... food for thought. 
 );
 
 
